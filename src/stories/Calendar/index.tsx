@@ -7,9 +7,11 @@ import { twMerge } from "tailwind-merge";
 export default function Calendar({
   date,
   setDate,
+  checkedDates = [],
 }: {
   date: Date;
   setDate: (date: Date) => void;
+  checkedDates: number[];
 }) {
   const [selectDate, setSelectDate] = useState<Date>(new Date(date));
   const [selectMonth, setSelectMonth] = useState<Date>(new Date(date));
@@ -99,7 +101,7 @@ export default function Calendar({
             <div
               key={index}
               className={twMerge(
-                "aspect-square flex items-center flex-col pt-1 justify-center rounded-full",
+                "aspect-square flex items-center flex-col justify-center rounded-full relative",
                 selectDate.toLocaleDateString() ===
                   changeDate.toLocaleDateString()
                   ? "bg-blue-500 text-white font-medium"
@@ -115,13 +117,21 @@ export default function Calendar({
               }}
             >
               {changeDate.getDate()}
-              <span
-                className={twMerge(
-                  "w-1 h-1 rounded-full bg-blue-500",
-                  selectDate.toLocaleDateString() ===
-                    changeDate.toLocaleDateString() && "bg-white"
-                )}
-              ></span>
+              {checkedDates.findIndex(
+                (date) => changeDate.getDate() === date
+              ) !== -1 && (
+                <span
+                  className={twMerge(
+                    "absolute bottom-[2px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-500",
+                    selectDate.toLocaleDateString() ===
+                      changeDate.toLocaleDateString()
+                      ? "bg-white"
+                      : color === "text-gray-400"
+                      ? "bg-gray-400"
+                      : "bg-blue-500",
+                  )}
+                ></span>
+              )}
             </div>
           );
         })}
