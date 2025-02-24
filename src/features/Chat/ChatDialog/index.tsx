@@ -19,8 +19,9 @@ export default function ChatDialog({
       <div className="whitespace-pre-wrap">{answer}</div>
       {showButton && (
         <button
-          onClick={() => {
+          onClick={async () => {
             setText(answer);
+            await new Promise((resolve) => setTimeout(resolve, 1000));
             handleSpeaker();
           }}
         >

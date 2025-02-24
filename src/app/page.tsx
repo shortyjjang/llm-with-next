@@ -2,7 +2,7 @@
 
 import ChatDialog from "@/features/Chat/ChatDialog";
 import SpeechToText from "@/features/Chat/SpeechToText";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Chat() {
   const answerRef = useRef<{
@@ -24,6 +24,7 @@ export default function Chat() {
     "loading" | "success" | "error"
   >("success");
   const [rendering, setRendering] = useState("");
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
   const handleSendMessage = async (text: string) => {
     if (!text) return;
     if (rendering) setRendering("");
@@ -79,6 +80,27 @@ export default function Chat() {
       setFetchStatus("error");
     }
   };
+  useEffect(() => {
+    const handleAutoScroll = () => {
+      if(fetchStatus === "loading") {
+        if(!scrollTimeout.current) {
+          scrollTimeout.current = setTimeout(() => {
+            window.scrollTo({
+              top: document.body.scrollHeight,
+              behavior: 'smooth'
+            });
+          }, 100);
+        }
+      } else if(scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+        scrollTimeout.current = null;
+      }
+    };
+    window.addEventListener('scroll', handleAutoScroll);
+    return () => {
+      window.removeEventListener('scroll', handleAutoScroll);
+    };
+  }, [fetchStatus]);
   return (
     <>
       <div className="flex-1 p-4 xl:p-8 flex flex-col gap-4">

@@ -40,6 +40,7 @@ export default function SpeechToText({
     }} className="sticky bottom-0 bg-white p-4">
       <div className="relative w-full flex items-center bg-gray-50 rounded-md p-2 max-w-4xl mx-auto">
         <button
+          type="button"
           className={twMerge("shadow-sm rounded-full p-2", isListening ? "bg-blue-500 text-white": "bg-white text-gray-500")}
           title={isListening ? "녹음 중지" : "녹음 시작"}
           onClick={() => {
@@ -61,6 +62,7 @@ export default function SpeechToText({
         />
         <button
           type="submit"
+          disabled={!value || isListening}
           className="bg-blue-500 text-white p-2 rounded-full"
         >
           <FaArrowRight />
